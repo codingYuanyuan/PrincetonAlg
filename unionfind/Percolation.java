@@ -1,4 +1,4 @@
-//package unionfind;
+package unionfind;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
@@ -7,13 +7,17 @@ public class Percolation {
 	final private WeightedQuickUnionUF uf;
 	final private int N;
 	private int nos;
+	final private int start = 0;
+	final private int bottom;
+	
 		
 	public Percolation(int n){
 		if (n <= 0) throw new IllegalArgumentException("IllegalArgument Exception");
 		this.openr = new int[n][n];
 		this.N = n;
 		this.nos = 0;
-		this.uf = new WeightedQuickUnionUF(n*n);
+		this.uf = new WeightedQuickUnionUF(n*n+2);
+		this.bottom = n*n+1;
 	}
 	
 	public void open(int row, int col) {
@@ -21,23 +25,39 @@ public class Percolation {
 		 when open a block, we should check the nearby open blocks and connect them with the use of WeightedUnionFindUF
 		 */
 		if (row <= 0 || row > N || col <= 0 || col > N ) throw new IllegalArgumentException("Illegal Argument Exception");
-		if (this.openr[row-1][col-1] == 1) return;
+		if (isOpen(row,col)) return;
 		this.openr[row-1][col-1] = 1;
 		this.nos ++;
+		
 		if (this.N < 2) return;
 		
-		if (row+1<= this.N && isOpen(row+1, col)) {
-			this.uf.union((row-1)*this.N+(col-1), row*this.N+(col-1));
+		//down
+		if (row == this.N) {
+			this.uf.union(this.bottom,twotoo(row,col));
+		} else if (row+1<= this.N && isOpen(row+1, col)) {
+			this.uf.union(twotoo(row, col), twotoo(row+1,col));
 		}
-		if (row-1 >= 1 && isOpen(row-1, col)) {
-			this.uf.union((row-1)*this.N+(col-1), (row-2)*this.N+(col-1));
+		
+		//up
+		if (row-1 == 0) {
+			this.uf.union(this.start, twotoo(row,col));
+		} else if (isOpen(row-1, col)) {
+			this.uf.union(twotoo(row,col), twotoo(row-1,col));
 		}
+		//left
+		
 		if (col-1 >= 1 && isOpen(row, col-1)) {
-			this.uf.union((row-1)*this.N+(col-1), (row-1)*this.N+col-2);
+			this.uf.union(twotoo(row,col), twotoo(row,col-1));
 		}
+		
+		//right 
 		if (col+1 <= this.N && isOpen(row, col+1)) {
-			this.uf.union((row-1)*this.N+(col-1), (row-1)*this.N+col);
+			this.uf.union(twotoo(row,col), twotoo(row,col+1));
 		}	
+	}
+	
+	private int twotoo(int row, int col) {
+		return (row-1)*this.N + col;
 	}
 	
 	public boolean isOpen(int row, int col) {
@@ -45,11 +65,7 @@ public class Percolation {
 		 * check is a block is open
 		 */
 		if (row <= 0 || row > this.N || col <= 0 || col >  this.N ) throw new IllegalArgumentException("Illegal Argument Exception");
-		if (this.openr[row-1][col-1] == 0){
-			return false;
-		}else {
-			return true;
-		}
+		return (this.openr[row-1][col-1] == 1);
 	}
 	
 	public boolean isFull(int row, int col) {
@@ -57,13 +73,7 @@ public class Percolation {
 		 * check is a block is full
 		 */
 		if (row <= 0 || row > this.N || col <= 0 || col > this.N ) throw new IllegalArgumentException("Illegal Argument Exception");
-		for (int i = 0; i < this.N; i++) {
-			
-			if (this.uf.connected((row-1)*this.N+col-1, i) && isOpen(row,col)) {
-				return true;
-			}
-		}
-		return false;
+		return this.uf.connected(twotoo(row,col), this.start);
 	}
 	
 	public int numberOfOpenSites() {
@@ -77,12 +87,7 @@ public class Percolation {
 		/*
 		 * check is a system percolates
 		 */
-		for (int i = 1; i<= this.N; i++ ) {
-			if ( isFull(this.N,i)) {
-				return true;
-			}
-		}
-		return false;
+		return this.uf.connected(this.start,this.bottom);
 	}
 	
 	public static void main(String[] args) {	

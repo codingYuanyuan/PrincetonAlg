@@ -1,4 +1,4 @@
-//package unionfind;
+package unionfind;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
@@ -19,6 +19,13 @@ public class PercolationStats {
 		
 		for (int i = 0; i < this.trailsn; i++) {
 			Percolation perc = new Percolation(this.numb);
+			int count = 0;
+			while( count < n) {
+				int row = StdRandom.uniform(1, n + 1);
+				int col = StdRandom.uniform(1, n + 1);
+				perc.open(row, col);
+				count ++; 
+			}
 			while( !perc.percolates()) {
 				int row = StdRandom.uniform(1, n + 1);
 				int col = StdRandom.uniform(1, n + 1);
