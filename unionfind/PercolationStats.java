@@ -1,19 +1,19 @@
-package unionfind;
+//package unionfind;
 
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class PercolationStats {
-	private int numb;
-	private int trailsn;
-	private double[] noss;
-	private double tot;
+	final private int numb;
+	final private int trailsn;
+	final private double[] noss;
+	final private double tot;
 	
 	public PercolationStats(int n, int trials) {
+		if (n <= 0 || trials <= 0) throw new IllegalArgumentException("IllegalArgument Exception");
+
 		this.numb = n;
 		this.trailsn = trials;
-		WeightedQuickUnionUF tempUF = new WeightedQuickUnionUF(n);
 		this.noss = new double[trials];
 		this.tot = n*n;
 		
@@ -24,7 +24,7 @@ public class PercolationStats {
 				int col = StdRandom.uniform(1, n + 1);
 				perc.open(row, col);
 			}
-			this.noss[i] = perc.numberOfOpenSites()/(double) this.tot;
+			this.noss[i] = perc.numberOfOpenSites()/ this.tot;
 		}
 	}
 	

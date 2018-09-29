@@ -1,16 +1,15 @@
-package unionfind;
+//package unionfind;
 
-import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-import java.lang.*;
+
 public class Percolation {
 	private int[][] openr;
-	private WeightedQuickUnionUF uf;
-	private int N;
+	final private WeightedQuickUnionUF uf;
+	final private int N;
 	private int nos;
 		
 	public Percolation(int n){
+		if (n <= 0) throw new IllegalArgumentException("IllegalArgument Exception");
 		this.openr = new int[n][n];
 		this.N = n;
 		this.nos = 0;
@@ -21,7 +20,7 @@ public class Percolation {
 		/*
 		 when open a block, we should check the nearby open blocks and connect them with the use of WeightedUnionFindUF
 		 */
-		if (row <= 0 || row > N || col <= 0 || col > N ) throw new IndexOutOfBoundsException("row index i out of bounds");
+		if (row <= 0 || row > N || col <= 0 || col > N ) throw new IllegalArgumentException("Illegal Argument Exception");
 		if (this.openr[row-1][col-1] == 1) return;
 		this.openr[row-1][col-1] = 1;
 		this.nos ++;
@@ -45,7 +44,7 @@ public class Percolation {
 		/*
 		 * check is a block is open
 		 */
-		if (row <= 0 || row > this.N || col <= 0 || col >  this.N ) throw new IndexOutOfBoundsException("row index i out of bounds");
+		if (row <= 0 || row > this.N || col <= 0 || col >  this.N ) throw new IllegalArgumentException("Illegal Argument Exception");
 		if (this.openr[row-1][col-1] == 0){
 			return false;
 		}else {
@@ -57,9 +56,10 @@ public class Percolation {
 		/*
 		 * check is a block is full
 		 */
-		if (row <= 0 || row > this.N || col <= 0 || col > this.N ) throw new IndexOutOfBoundsException("row index i out of bounds");
+		if (row <= 0 || row > this.N || col <= 0 || col > this.N ) throw new IllegalArgumentException("Illegal Argument Exception");
 		for (int i = 0; i < this.N; i++) {
-			if (this.uf.connected((row-1)*this.N+col-1, i) && isOpen(row,i+1)){
+			
+			if (this.uf.connected((row-1)*this.N+col-1, i) && isOpen(row,col)) {
 				return true;
 			}
 		}
@@ -86,11 +86,29 @@ public class Percolation {
 	}
 	
 	public static void main(String[] args) {	
-		Percolation perc = new Percolation(3);
-		perc.open(1, 2);
+		Percolation perc = new Percolation(6);
+		perc.open(1, 6);
+		perc.open(2, 6);
+		perc.open(3, 6);
+		perc.open(4, 6);
+		perc.open(5, 6);
+		perc.open(5, 5);
+		perc.open(4, 4);
+		perc.open(3, 4);
+		perc.open(2, 4);
+		perc.open(2, 3);
 		perc.open(2, 2);
-		System.out.println(perc.isFull(2,2));
+		perc.open(2, 1);
 		perc.open(3, 1);
+		perc.open(4, 1);
+		perc.open(5, 1);
+		perc.open(5, 2);
+		perc.open(6, 2);
+		perc.open(5, 4);
+		System.out.println(perc.isFull(5, 2)+"111");
+		System.out.println(perc.isFull(6, 2)+"222");
+		System.out.println(perc.isOpen(6, 2));
+	
 		System.out.println(perc.percolates());
 		
 	}
