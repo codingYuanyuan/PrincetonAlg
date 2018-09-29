@@ -3,7 +3,7 @@ package unionfind;
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
-
+import java.lang.*;
 public class Percolation {
 	private int[][] openr;
 	private WeightedQuickUnionUF uf;
@@ -22,6 +22,7 @@ public class Percolation {
 		 when open a block, we should check the nearby open blocks and connect them with the use of WeightedUnionFindUF
 		 */
 		if (row <= 0 || row > N || col <= 0 || col > N ) throw new IndexOutOfBoundsException("row index i out of bounds");
+		if (this.openr[row-1][col-1] == 1) return;
 		this.openr[row-1][col-1] = 1;
 		this.nos ++;
 		if (this.N < 2) return;
