@@ -17,7 +17,7 @@ public class PercolationStats {
 		this.noss = new double[trials];
 		this.tot = n*n;
 		
-		for (int i = 0; i < this.trailsn; i++) {
+		for (int i = 0; i < this.trailsn; i++) { 
 			Percolation perc = new Percolation(this.numb);
 			int count = 0;
 			while( count < n) {
